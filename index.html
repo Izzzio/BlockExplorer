@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitamin Blockchain Explorer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="explorer.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">VITAMIN</a>
+        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
+                data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+              <ul class="navbar-nav mr-auto">
+               <!--   <li class="nav-item active">
+                      <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Settings</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Profile</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="#">Help</a>
+                  </li> -->
+              </ul>
+              <form class="form-inline mt-2 mt-md-0 searchForm">
+                  <input class="form-control mr-sm-2" id="search" type="text" placeholder="Block id or hash" aria-label="Search">
+                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+          </div>
+    </nav>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+
+
+        <main role="main" class="col-md-12 pt-3">
+            <div>
+                Current connections: <span class="badge badge-primary" id="connections">0</span> &nbsp;&nbsp;
+                Blockchain Height: <span class="badge badge-success" id="height">0</span>
+            </div>
+
+            <div id="lastestBlocksPage">
+                <h2>Latest Blocks</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped" id="lastTransactions">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Age</th>
+                            <th>Size in bytes</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="blockDetailPage" style="display: none">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>Block #<span class="blockIndex">0</span></h2>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2">
+                        <a href="#" class="btn  btn-secondary btn-block returnButton">Return</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10"><br>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <b>Block hash: </b>
+                            </div>
+                            <div class="col-md-9">
+                                <span class="blockHash"></span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <b>Previous block hash: </b>
+                            </div>
+                            <div class="col-md-9">
+                                <span class="blockPrevHash"></span>
+                            </div>
+
+                        </div>
+                        <h2>Summary</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table" style="table-layout: fixed">
+                                    <tbody>
+                                    <tr>
+                                        <td><strong><span>Height</span></strong></td>
+                                        <td class="text-right text-muted"><span class="blockIndex">0</span></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong><span>Timestamp</span></strong></td>
+                                        <td class="text-right text-muted ng-binding blockTimestamp"></td>
+                                    </tr>
+
+
+                                    <tr class="">
+                                        <td><strong><span>Previous Block</span></strong></td>
+                                        <td class="text-right"><a href="#" class="blockHref blockPrevious"></a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table">
+                                    <tbody>
+
+
+                                    <tr>
+                                        <td><strong><span>Size (bytes)</span></strong></td>
+                                        <td class="text-right text-muted ng-binding blockSize">99225</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong><span>Block type</span></strong></td>
+                                        <td class="text-right text-muted ng-binding blockType"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong><span>Next Block</span></strong></td>
+                                        <td class="text-right"><a href="#" class="blockHref blockNext"></a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <h2>Block data</h2>
+                        <div class="col-md-12" style="overflow-x: scroll">
+                            <code class="blockData"></code>
+                        </div>
+                        <br>
+                        <h2>Parser</h2>
+                        <div class="blockParserOutput">
+
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<div class="modal hide fade hide" id="loadingModal">
+
+    <div class="modal-body" style="text-align: center; padding-top: 20vh">
+        <h2 style="color: white">Waiting for blockchain connection...</h2>
+        <div class="loader" style="margin-left: 50vw;"></div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
+<script src="Candy/candy.js"></script>
+<script src="explorer.js"></script>
+<!-- Parsers -->
+<script src="parsers/CandyData.js"></script>
+<script src="parsers/Smart.js"></script>
+<script src="parsers/Transaction.js"></script>
+<script src="parsers/WalletRegister.js"></script>
+<!-- Parsers -->
+</body>
+</html>
