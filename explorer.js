@@ -5,7 +5,7 @@
 
 const maxBlocksOnPage = 15;
 
-var nodesFallback = ["ws://twister-vl.ru:6001", "ws://localhost:6001"];
+var nodes = ['wss://xn--90absg.xn--p1ai/vitamin/', "ws://localhost:6001"];
 var candy = null;
 var lastestBlocks = [];
 var parsers = {};
@@ -13,10 +13,10 @@ var parsers = {};
 $(document).ready(function () {
     $('#loadingModal').modal('show');
     $.get('nodes.json', function (data) {
-        console.log(data);
+        nodes = data;
     });
 
-    startCandyConnection(nodesFallback);
+    startCandyConnection(nodes);
 
     $('.returnButton').click(function () {
         $('#lastestBlocksPage').fadeIn();
