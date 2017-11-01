@@ -1,3 +1,3 @@
-# Vitamin Block Explorer
+# iZ³ Block Explorer
 
-Block digger for Vitamin blockchain. Depends on Candy for blockchain connection.
+Block digger for iZ³ (Izzzio) blockchain. Depends on Candy for blockchain connection.

@@ -1,5 +1,5 @@
 /**
- * Vitamin Blockchain explorer
+ * Izzzio Blockchain explorer
  * @author Andrey Nedobylsky
  */
 
