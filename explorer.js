@@ -14,9 +14,13 @@ $(document).ready(function () {
     $('#loadingModal').modal('show');
     $.get('nodes.json', function (data) {
         nodes = data;
+	if(typeof data === 'string'){
+		nodes = JSON.parse(data);
+	}
+	startCandyConnection(nodes);
     });
 
-    startCandyConnection(nodes);
+    //startCandyConnection(nodes);
 
     $('.returnButton').click(function () {
         $('#lastestBlocksPage').fadeIn();
