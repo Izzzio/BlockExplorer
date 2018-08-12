@@ -179,13 +179,14 @@ function updateLatestBlocks() {
 
     lastestBlocks = [];
     if(candy.blockHeight !== 0) {
-	if(maxBlocksOnPage > candy.blockHeight){
-		maxBlocksOnPage = candy.blockHeight - 1;
+	let maxBLocksOnPageLimited = maxBlocksOnPage;
+	if(maxBLocksOnPageLimited > candy.blockHeight){
+		maxBLocksOnPageLimited = candy.blockHeight - 1;
 	}
-	for (var i = candy.blockHeight; i > candy.blockHeight - maxBlocksOnPage; i--) {
+	for (var i = candy.blockHeight; i > candy.blockHeight - maxBLocksOnPageLimited; i--) {
 	    candy.loadResource(i, function (err, block, rawBlock) {
 		lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
-		if(lastestBlocks.length >= maxBlocksOnPage) {
+		if(lastestBlocks.length >= maxBLocksOnPageLimited) {
 		    lastBlocksTableFormat();
 		}
 	    });
