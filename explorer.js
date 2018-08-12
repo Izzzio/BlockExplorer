@@ -179,13 +179,16 @@ function updateLatestBlocks() {
 
     lastestBlocks = [];
     if(candy.blockHeight !== 0) {
-        for (var i = candy.blockHeight; i > candy.blockHeight - maxBlocksOnPage; i--) {
-            candy.loadResource(i, function (err, block, rawBlock) {
-                lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
-                if(lastestBlocks.length >= maxBlocksOnPage) {
-                    lastBlocksTableFormat();
-                }
-            });
-        }
+	if(maxBlocksOnPage > candy.blockHeight){
+		maxBlocksOnPage = candy.blockHeight - 1;
+	}
+	for (var i = candy.blockHeight; i > candy.blockHeight - maxBlocksOnPage; i--) {
+	    candy.loadResource(i, function (err, block, rawBlock) {
+		lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
+		if(lastestBlocks.length >= maxBlocksOnPage) {
+		    lastBlocksTableFormat();
+		}
+	    });
+	}
     }
 }
