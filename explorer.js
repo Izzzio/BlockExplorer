@@ -162,6 +162,7 @@ function loadBlockPreview(index) {
         window.location.hash = index;
         let blockType = detectBlockType(rawBlock);
         $('#lastestBlocksPage').hide();
+        $('#modalModulePage').hide();
         $('#blockDetailPage').fadeIn();
 
         $('.blockIndex').text(rawBlock.index);
