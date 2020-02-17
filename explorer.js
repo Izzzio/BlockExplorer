@@ -98,7 +98,27 @@ function startCandyConnection(nodes) {
         }, 5000);
         updateLatestBlocks();
 
+        setTimeout(function () {
+            if(window.location.hash.length !== 0) {
+                $('#search').val(window.location.hash.replace('#', ''));
+                $('.searchForm').submit();
+            }
+        }, 1000);
+
     };
+
+    candy.onmessage = function (messageBody) {
+        for (var a in waitingMessages) {
+            if(waitingMessages.hasOwnProperty(a)) {
+                if(waitingMessages[a].id === messageBody.id) {
+                    if(waitingMessages[a].handle(messageBody)) {
+                        delete  waitingMessages[a];
+                    }
+                    return;
+                }
+            }
+        }
+    }
 }
 
 
@@ -126,6 +146,7 @@ function detectBlockType(rawBlock) {
 function loadBlockPreview(index) {
     index = (isNaN(index) ? $(this).text() : index);
     candy.loadResource(index, function (err, block, rawBlock) {
+        window.location.hash = index;
         var blockType = detectBlockType(rawBlock);
         $('#lastestBlocksPage').hide();
         $('#blockDetailPage').fadeIn();
@@ -138,7 +159,9 @@ function loadBlockPreview(index) {
         $('.blockNext').text(rawBlock.index + 1);
         $('.blockType').text(blockType);
         $('.blockTimestamp').text(moment(rawBlock.timestamp).format('LLLL'));
+        $('.blockStartTimestamp').text(moment(rawBlock.startTimestamp).format('LLLL'));
         $('.blockData').text(rawBlock.data);
+        $('.blockSign').text(rawBlock.sign);
 
         if(typeof parsers[blockType] !== 'undefined') {
             $('.blockParserOutput').html(parsers[blockType](rawBlock));
@@ -157,6 +180,7 @@ function loadBlockPreview(index) {
 function updateLatestBlocks() {
 
     function lastBlocksTableFormat() {
+
         function insertBlock(rawBlock) {
             return $('#lastTransactions tbody > tr:last').after(
                 "                    <tr>\n" +
@@ -190,7 +214,10 @@ function updateLatestBlocks() {
         for (var i = candy.blockHeight; i > candy.blockHeight - maxBLocksOnPageLimited; i--) {
             candy.loadResource(i, function (err, block, rawBlock) {
                 lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
-                if(lastestBlocks.length >= maxBLocksOnPageLimited) {
+                if(lastestBlocks.length >= maxBLocksOnPageLimited || lastestBlocks.length >= candy.blockHeight) {
+                    lastestBlocks = lastestBlocks.sort(function (b1, b2) {
+                        return (b2.id - b1.id)
+                    });
                     lastBlocksTableFormat();
                 }
             });
