@@ -41,6 +41,7 @@ $(document).ready(function () {
 
         for (let hook of searchHooks) {
             if(await hook(search)) {
+                window.location.hash = search;
                 return;
             }
         }
