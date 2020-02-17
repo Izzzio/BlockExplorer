@@ -10,6 +10,8 @@ let candy = null;
 let lastestBlocks = [];
 let parsers = {};
 
+let lastBlockInTable = 0;
+
 $(document).ready(function () {
     $('#loadingModal').modal('show');
     $.get('nodes.json', function (data) {
@@ -107,7 +109,7 @@ function startCandyConnection(nodes) {
 
     };
 
-    candy.onmessage = function (messageBody) {
+    /*candy.onmessage = function (messageBody) {
         for (let a in waitingMessages) {
             if(waitingMessages.hasOwnProperty(a)) {
                 if(waitingMessages[a].id === messageBody.id) {
@@ -118,7 +120,7 @@ function startCandyConnection(nodes) {
                 }
             }
         }
-    }
+    }*/
 }
 
 
@@ -186,6 +188,11 @@ function updateLatestBlocks() {
     function lastBlocksTableFormat() {
 
         function insertBlock(rawBlock) {
+
+            if(rawBlock.index > lastBlockInTable) {
+                lastBlockInTable = rawBlock.index;
+            }
+
             return $('#lastTransactions tbody > tr:last').after(
                 "                    <tr>\n" +
                 "                        <td> <a href='#' class='blockHref'>" + rawBlock.index + "</a></td>\n" +
@@ -196,7 +203,8 @@ function updateLatestBlocks() {
             );
         }
 
-        let old = $('#lastTransactions  tbody > tr').fadeOut(500);
+        let old;
+        old = $('#lastTransactions  tbody > tr').fadeOut(500);
         setTimeout(function () {
             lastestBlocks.forEach(function (block) {
                 insertBlock(block.raw).hide().fadeIn(100);
@@ -210,7 +218,7 @@ function updateLatestBlocks() {
     }
 
     lastestBlocks = [];
-    if(candy.blockHeight !== 0) {
+    if(candy.blockHeight !== 0 && lastBlockInTable !== candy.blockHeight) {
         let maxBLocksOnPageLimited = MAX_BLOCKS_ON_PAGE;
         if(maxBLocksOnPageLimited > candy.blockHeight) {
             maxBLocksOnPageLimited = candy.blockHeight /*- 1*/;
