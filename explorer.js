@@ -1,5 +1,5 @@
 /**
- * Izzzio Blockchain explorer
+ * IZZZIO Blockchain explorer
  * @author Andrey Nedobylsky
  */
 
@@ -13,11 +13,14 @@ var parsers = {};
 $(document).ready(function () {
     $('#loadingModal').modal('show');
     $.get('nodes.json', function (data) {
+        console.log(data);
         nodes = data;
-	if(typeof data === 'string'){
-		nodes = JSON.parse(data);
-	}
-	startCandyConnection(nodes);
+        if(typeof data === 'string') {
+            nodes = JSON.parse(data);
+        }
+
+    }).always(function () {
+        startCandyConnection(nodes);
     });
 
     //startCandyConnection(nodes);
@@ -72,6 +75,7 @@ function startCandyConnection(nodes) {
     function hideModal() {
         $('#loadingModal').fadeOut(1000);
         $('.modal-backdrop').fadeOut(1000);
+        $('.modal-open').removeClass('modal-open');
     }
 
     candy = new Candy(nodes).start();
@@ -179,17 +183,17 @@ function updateLatestBlocks() {
 
     lastestBlocks = [];
     if(candy.blockHeight !== 0) {
-	let maxBLocksOnPageLimited = maxBlocksOnPage;
-	if(maxBLocksOnPageLimited > candy.blockHeight){
-		maxBLocksOnPageLimited = candy.blockHeight - 1;
-	}
-	for (var i = candy.blockHeight; i > candy.blockHeight - maxBLocksOnPageLimited; i--) {
-	    candy.loadResource(i, function (err, block, rawBlock) {
-		lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
-		if(lastestBlocks.length >= maxBLocksOnPageLimited) {
-		    lastBlocksTableFormat();
-		}
-	    });
-	}
+        let maxBLocksOnPageLimited = maxBlocksOnPage;
+        if(maxBLocksOnPageLimited > candy.blockHeight) {
+            maxBLocksOnPageLimited = candy.blockHeight /*- 1*/;
+        }
+        for (var i = candy.blockHeight; i > candy.blockHeight - maxBLocksOnPageLimited; i--) {
+            candy.loadResource(i, function (err, block, rawBlock) {
+                lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
+                if(lastestBlocks.length >= maxBLocksOnPageLimited) {
+                    lastBlocksTableFormat();
+                }
+            });
+        }
     }
 }
