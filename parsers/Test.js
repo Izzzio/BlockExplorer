@@ -1,19 +1,21 @@
 /**
- * Transaction parser for IZZZIO block explorer
+ * Test parser for IZZZIO block explorer
  */
+
+console.log('TEST parser loaded');
 
 if(typeof parsers === 'undefined') {
     console.log("Can't detect IZZZIO block explorer script");
 } else {
 
-    parsers['Transaction'] = function (rawBlock) {
+    parsers['Test'] = async function (rawBlock) {
         try {
             var data = JSON.parse(rawBlock.data);
         } catch (e) {
             return 'Data parsing error';
         }
 
-        return 'Transaction: <br><b>From wallet id:</b><br>' + data.from + '<br><b>To wallet id:</b><br>' + data.to + '<br><b>Amount:</b><br>' + data.amount;
+        return 'Test block src:<br><code>' + JSON.stringify(data, undefined, 2) + '</code>';
 
     };
 }

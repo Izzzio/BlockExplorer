@@ -1,9 +1,9 @@
 /**
- * Wallet Register parser for Vitamin block explorer
+ * Wallet Register parser for IZZZIO block explorer
  */
 
 if(typeof parsers === 'undefined') {
-    console.log("Can't detect Vitamin block explorer script");
+    console.log("Can't detect IZZZIO block explorer script");
 } else {
 
     parsers['WalletRegister'] = function (rawBlock) {

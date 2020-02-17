@@ -1,9 +1,9 @@
 /**
- * Candy data parser for Vitamin block explorer
+ * Candy data parser for IZZZIO block explorer
  */
 
 if(typeof parsers === 'undefined') {
-    console.log("Can't detect Vitamin block explorer script");
+    console.log("Can't detect IZZZIO block explorer script");
 } else {
 
     function b64DecodeUnicode(str) {

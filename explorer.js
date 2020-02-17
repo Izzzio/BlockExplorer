@@ -3,12 +3,12 @@
  * @author Andrey Nedobylsky
  */
 
-const maxBlocksOnPage = 15;
+const MAX_BLOCKS_ON_PAGE = 15;
 
-var nodes = ['wss://xn--90absg.xn--p1ai/vitamin/', "ws://localhost:6001"];
-var candy = null;
-var lastestBlocks = [];
-var parsers = {};
+let nodes = ['wss://xn--90absg.xn--p1ai/vitamin/', "ws://localhost:6001"];
+let candy = null;
+let lastestBlocks = [];
+let parsers = {};
 
 $(document).ready(function () {
     $('#loadingModal').modal('show');
@@ -32,12 +32,12 @@ $(document).ready(function () {
 
     $('.searchForm').on('submit', function (event) {
         event.preventDefault();
-        var search = $('#search').val();
+        let search = $('#search').val();
         if(!isNaN(search)) {
             loadBlockPreview(search);
         } else {
             if(confirm('Search by hash may take a long time. Are you sure?')) {
-                var blockId = 1;
+                let blockId = 1;
 
                 function checkBlock() {
                     candy.loadResource(blockId, function (err, block, rawBlock) {
@@ -108,11 +108,11 @@ function startCandyConnection(nodes) {
     };
 
     candy.onmessage = function (messageBody) {
-        for (var a in waitingMessages) {
+        for (let a in waitingMessages) {
             if(waitingMessages.hasOwnProperty(a)) {
                 if(waitingMessages[a].id === messageBody.id) {
                     if(waitingMessages[a].handle(messageBody)) {
-                        delete  waitingMessages[a];
+                        delete waitingMessages[a];
                     }
                     return;
                 }
@@ -129,7 +129,7 @@ function startCandyConnection(nodes) {
  */
 function detectBlockType(rawBlock) {
     try {
-        var data = JSON.parse(rawBlock.data);
+        let data = JSON.parse(rawBlock.data);
         if(typeof data.type !== 'undefined') {
             return data.type;
         }
@@ -147,7 +147,7 @@ function loadBlockPreview(index) {
     index = (isNaN(index) ? $(this).text() : index);
     candy.loadResource(index, function (err, block, rawBlock) {
         window.location.hash = index;
-        var blockType = detectBlockType(rawBlock);
+        let blockType = detectBlockType(rawBlock);
         $('#lastestBlocksPage').hide();
         $('#blockDetailPage').fadeIn();
 
@@ -164,7 +164,11 @@ function loadBlockPreview(index) {
         $('.blockSign').text(rawBlock.sign);
 
         if(typeof parsers[blockType] !== 'undefined') {
-            $('.blockParserOutput').html(parsers[blockType](rawBlock));
+            let parserResult = parsers[blockType](rawBlock);
+            Promise.resolve(parserResult).then((value) => {
+                $('.blockParserOutput').html(value);
+            });
+
         } else {
             $('.blockParserOutput').text('No parser for this block type');
         }
@@ -192,7 +196,7 @@ function updateLatestBlocks() {
             );
         }
 
-        var old = $('#lastTransactions  tbody > tr').fadeOut(500);
+        let old = $('#lastTransactions  tbody > tr').fadeOut(500);
         setTimeout(function () {
             lastestBlocks.forEach(function (block) {
                 insertBlock(block.raw).hide().fadeIn(100);
@@ -207,11 +211,11 @@ function updateLatestBlocks() {
 
     lastestBlocks = [];
     if(candy.blockHeight !== 0) {
-        let maxBLocksOnPageLimited = maxBlocksOnPage;
+        let maxBLocksOnPageLimited = MAX_BLOCKS_ON_PAGE;
         if(maxBLocksOnPageLimited > candy.blockHeight) {
             maxBLocksOnPageLimited = candy.blockHeight /*- 1*/;
         }
-        for (var i = candy.blockHeight; i > candy.blockHeight - maxBLocksOnPageLimited; i--) {
+        for (let i = candy.blockHeight; i > candy.blockHeight - maxBLocksOnPageLimited; i--) {
             candy.loadResource(i, function (err, block, rawBlock) {
                 lastestBlocks.push({id: rawBlock.index, raw: rawBlock, data: block});
                 if(lastestBlocks.length >= maxBLocksOnPageLimited || lastestBlocks.length >= candy.blockHeight) {
@@ -223,4 +227,14 @@ function updateLatestBlocks() {
             });
         }
     }
+}
+
+
+/**
+ * Loads parser module
+ * Example: loadParser('parsers/EcmaContractDeploy.js');
+ * @param {string} uri
+ */
+function loadParser(uri) {
+    $.getScript(uri);
 }

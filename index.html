@@ -105,13 +105,18 @@
                                 <table class="table" style="table-layout: fixed">
                                     <tbody>
                                     <tr>
-                                        <td><strong><span>Height</span></strong></td>
-                                        <td class="text-right text-muted"><span class="blockIndex">0</span></td>
+                                        <td><strong><span>Index</span></strong></td>
+                                        <td class="text-right text-muted"><a href="#" class="blockHref blockIndex"><span class="">0</span></a></td>
                                     </tr>
 
                                     <tr>
                                         <td><strong><span>Timestamp</span></strong></td>
                                         <td class="text-right text-muted ng-binding blockTimestamp"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong><span>Start Timestamp</span></strong></td>
+                                        <td class="text-right text-muted ng-binding blockStartTimestamp"></td>
                                     </tr>
 
 
@@ -135,6 +140,11 @@
                                     <tr>
                                         <td><strong><span>Block type</span></strong></td>
                                         <td class="text-right text-muted ng-binding blockType"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><strong><span>Block sign</span></strong></td>
+                                        <td class="text-right text-muted ng-binding blockSign" style="overflow-x: scroll; max-width: 500px"></td>
                                     </tr>
 
                                     <tr>
@@ -181,14 +191,19 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
         integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
-<script src="https://raw.githubusercontent.com/VitaminBlockchain/Candy/master/candy.js"></script>
 <script src="candy.js"></script>
 <script src="explorer.js"></script>
+
+<!-- Customization script (interface, parsers loading, etc.) -->
+<script src="customize.js"></script>
+
 <!-- Parsers -->
 <script src="parsers/CandyData.js"></script>
-<script src="parsers/Smart.js"></script>
 <script src="parsers/Transaction.js"></script>
 <script src="parsers/WalletRegister.js"></script>
+<script src="parsers/WalletRegister.js"></script>
+<script src="parsers/EcmaContractCallBlock.js"></script>
+<script src="parsers/EcmaContractDeploy.js"></script>
 <!-- Parsers -->
 </body>
 </html>
