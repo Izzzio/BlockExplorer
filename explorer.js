@@ -12,6 +12,8 @@ let parsers = {};
 
 let lastBlockInTable = 0;
 
+let searchHooks = [];
+
 $(document).ready(function () {
     $('#loadingModal').modal('show');
     $.get('nodes.json', function (data) {
@@ -30,11 +32,19 @@ $(document).ready(function () {
     $('.returnButton').click(function () {
         $('#lastestBlocksPage').fadeIn();
         $('#blockDetailPage').hide();
+        $('#modalModulePage').hide();
     });
 
-    $('.searchForm').on('submit', function (event) {
+    $('.searchForm').on('submit', async function (event) {
         event.preventDefault();
         let search = $('#search').val();
+
+        for (let hook of searchHooks) {
+            if(await hook(search)) {
+                return;
+            }
+        }
+
         if(!isNaN(search)) {
             loadBlockPreview(search);
         } else {
@@ -245,4 +255,26 @@ function updateLatestBlocks() {
  */
 function loadParser(uri) {
     $.getScript(uri);
+}
+
+/**
+ * Registers search hook
+ * @param {Function} hookFunction
+ */
+function registerSearchHook(hookFunction) {
+    searchHooks.push(hookFunction);
+}
+
+/**
+ * Opens modal page with custom content
+ * @param {string} modalHeader
+ * @param {string} modalContent
+ */
+function showModalPage(modalHeader, modalContent) {
+    $('#lastestBlocksPage').hide();
+    $('#blockDetailPage').hide();
+    $('#modalModulePage').fadeIn();
+
+    $('#modalHeader').html(modalHeader);
+    $('#modalContent').html(modalContent);
 }
